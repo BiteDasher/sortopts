@@ -31,13 +31,13 @@ while [ "$#" -gt 0 ]; do
 	esac
 	shift
 done
-if [ "$OPTOUT" == 1 ]; then
-echo "${__short_opts}"
-echo "${__long_opts}"
-echo "${__other}"
-else
 	[ "$SHORTDASH" == 1 ] && __dash='-' || __dash=''
 	[ "$PARSER" == 1 ] && __d='|' || __d=' '
+if [ "$OPTOUT" == 1 ]; then
+eval 'echo "${__short_opts//¢/'$__d'}"'
+eval 'echo "${__long_opts//¢/'$__d'}"'
+eval 'echo "${__other//¢/'$__d'}"'
+else
 { IFS='¢'; set -- ${__short_opts}; unset IFS; }
 __i=1
 while getopts "$__short_rules" opt; do
