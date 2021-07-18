@@ -26,11 +26,11 @@ while [ "$#" -gt 0 ]; do
 		  shift
   	     esac
 	;;
-	*)   __other+=("$1")
+	*)   __other+="'$1'¢"
 	;;
 	esac
 	shift
-done < <(echo -e "$__opts")
+done
 if [ "$OPTOUT" == 1 ]; then
 echo "${__short_opts}"
 echo "${__long_opts}"
@@ -47,9 +47,10 @@ done
 echo
 { IFS='¢'; set -- ${__long_opts}; unset IFS; }
 __long_rules="${__long_rules//,/\\n}"
-while [ "$#" -gt 1 ]; do
+while [ "$#" -gt 0 ]; do
 	__arg="${1/--/}"
 	__sum="$(findline "$__arg")"
+	case "$1" in --*|-*) : ;; *) other+="'$1'¢"; shift; continue ;; esac
 	case "$__sum" in
 	:) case "$2" in
 	   --*|-*)
@@ -64,11 +65,11 @@ while [ "$#" -gt 1 ]; do
     	    esac
 	;;
 	"") __long_args+="$1¢"
-	    [ -n "$2" ] && __other+="$2"
+	    [ -n "$2" ] && __other+="$2¢"
 	;;
 	esac
 	shift
 done
 eval 'echo "${__long_args//¢/'$__d'}"'
-eval 'echo "${__other// /'$__d'}"'
+eval 'echo "${__other//¢/'$__d'}"'
 fi
