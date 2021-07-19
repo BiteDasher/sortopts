@@ -6,7 +6,7 @@ Allows you to combine getopt with getopts and also get rid of the need for --lon
 
 `SHORTDASH=1` - Print one dash before short parsed arguments
 
-`PARSED=1` - Separate the key and its value from each other with a straight line (`|`)
+`PARSER=1` - Separate the key and its value from each other with a straight line (`|`)
 
 ## Example:
 ```
