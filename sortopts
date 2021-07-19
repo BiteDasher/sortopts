@@ -42,7 +42,8 @@ else
 __i=1
 while getopts "$__short_rules" opt; do
 	if [ "$__i" == 1 ]; then __i=0; else echo -n "$__d"; fi
-	echo -n "${__dash}$opt $OPTARG"
+	[ -n "$OPTARG" ] && __s=' ' || __s=''
+	echo -n "${__dash}${opt}${__s}${OPTARG}"
 done
 echo
 { IFS='¢'; set -- ${__long_opts}; unset IFS; }
