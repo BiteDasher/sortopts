@@ -15,13 +15,13 @@ while [ "$#" -gt 0 ]; do
 	       __long_opts+="$__long_1¢'$__long_2'¢"
 	;;
 	--*) __long_opts+="$1¢"
-	     case "$2" in --*|-*) : ;; *)
+	     case "$2" in --*|-*|"") : ;; *)
 		   __long_opts+="'$2'¢"
 		   shift
    	     esac
 	;;
 	-*)  __short_opts+="$1¢"
-	     case "$2" in --*|-*) : ;; *)
+	     case "$2" in --*|-*|"") : ;; *)
 		  __short_opts+="'$2'¢"
 		  shift
   	     esac
@@ -61,7 +61,7 @@ while [ "$#" -gt 0 ]; do
     	    esac
 	;;
 	"") __long_args+="$1¢"
-		[ -n "$2" ] && case "$2" in --*|-*) : ;;
+		case "$2" in --*|-*|"") : ;;
 		*) __other+="$2¢" ;; esac
 	;;
 	esac
