@@ -10,6 +10,12 @@ echo -e "$__long_rules"	| while read -r __line; do
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
+	--) __other+="$1¢"; shift
+	    for __opt in $@; do
+		    __other+="'$__opt'¢"
+	    done
+	    break
+	;;
 	--*=*) __long_1="${1%%=*}"
 	       __long_2="${1#*=}"
 	       __long_opts+="$__long_1¢'$__long_2'¢"
