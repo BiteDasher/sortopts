@@ -10,7 +10,11 @@ Allows you to combine getopt with getopts and also get rid of the need for --lon
 
 ## Example:
 ```
-./sortopts "a:b:c:" "one:,two,three::" \
-           -a1 -b 2 -c3 \
+./sortopts "a:b:c:d:-" "one:,two,three::" \
+           -a1 -b 2 -c3 -d 4 \
 	   --one --two --three 3
 ```
+
+## Needed binaries:
+`bash`
+`getopt` (from `util-linux`)
