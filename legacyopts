@@ -3,9 +3,9 @@ __short_rules="$1"
 __long_rules="$2"
 shift 2
 findline() {
-	while read -r __line; do
+echo -e "$__long_rules"	| while read -r __line; do
 		case "$__line" in "$1"[:]*) echo "${__line//[^:]/}" ;; esac
-	done < <(echo -e "$__long_rules")
+	done
 }
 
 while [ "$#" -gt 0 ]; do
