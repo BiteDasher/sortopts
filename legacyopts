@@ -1,0 +1,76 @@
+#!/bin/bash
+__short_rules="$1"
+__long_rules="$2"
+shift 2
+findline() {
+	while read -r __line; do
+		case "$__line" in "$1"[:]*) echo "${__line//[^:]/}" ;; esac
+	done < <(echo -e "$__long_rules")
+}
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+	--*=*) __long_1="${1%%=*}"
+	       __long_2="${1#*=}"
+	       __long_opts+="$__long_1¢'$__long_2'¢"
+	;;
+	--*) __long_opts+="$1¢"
+	     case "$2" in --*|-*) : ;; *)
+		   __long_opts+="'$2'¢"
+		   shift
+   	     esac
+	;;
+	-*)  __short_opts+="$1¢"
+	     case "$2" in --*|-*) : ;; *)
+		  __short_opts+="'$2'¢"
+		  shift
+  	     esac
+	;;
+	*)   __other+="'$1'¢"
+	;;
+	esac
+	shift
+done
+	[ "$SHORTDASH" == 1 ] && __dash='-' || __dash=''
+	[ "$PARSER" == 1 ] && __d='|' || __d=' '
+if [ "$OPTOUT" == 1 ]; then
+eval 'echo "${__short_opts//¢/'$__d'}"'
+eval 'echo "${__long_opts//¢/'$__d'}"'
+eval 'echo "${__other//¢/'$__d'}"'
+else
+{ IFS='¢'; set -- ${__short_opts}; unset IFS; }
+__i=1
+while getopts "$__short_rules" opt; do
+	if [ "$__i" == 1 ]; then __i=0; else echo -n "$__d"; fi
+	[ -n "$OPTARG" ] && __s=' ' || __s=''
+	echo -n "${__dash}${opt}${__s}${OPTARG}"
+done
+echo
+{ IFS='¢'; set -- ${__long_opts}; unset IFS; }
+__long_rules="${__long_rules//,/\\n}"
+while [ "$#" -gt 0 ]; do
+	__arg="${1/--/}"
+	__sum="$(findline "$__arg")"
+	case "$1" in --*|-*) : ;; *) other+="'$1'¢"; shift; continue ;; esac
+	case "$__sum" in
+	:) case "$2" in
+	   --*|-*)
+		echo "sortopts: $1 requires an argument" >&2 ;;
+	   *) __long_args+="$1 $2¢"; shift ;;
+   	   esac
+	;;    
+	::) case "$2" in
+	    --*|-*)
+	    	__long_args+="$1¢" ;;
+	    *) __long_args+="$1 $2¢"; shift ;;
+    	    esac
+	;;
+	"") __long_args+="$1¢"
+	    [ -n "$2" ] && __other+="$2¢"
+	;;
+	esac
+	shift
+done
+eval 'echo "${__long_args//¢/'$__d'}"'
+eval 'echo "${__other//¢/'$__d'}"'
+fi

@@ -18,3 +18,8 @@ Allows you to combine getopt with getopts and also get rid of the need for --lon
 ## Needed binaries:
 `bash`
 `getopt` (from `util-linux`)
+
+## if you want to use only bash built-in tools, no third party binaries
+Use `legacyopts`. There, for parsing short arguments, `getopts` is used - a utility built into the bash.
+
+Keep in mind that handling `x::` and `x:-` arguments will NOT work in this version of the script.
